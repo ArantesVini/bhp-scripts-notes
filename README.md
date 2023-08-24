@@ -14,3 +14,7 @@ For each chapter I will try to write a resume by mind, and after that review It.
 This book is true gold so I want to make the better usage possible.
 
 *Hack* the world!
+
+# License
+
+This repository is under [Mit License](LICENSE). Check it for more details.
