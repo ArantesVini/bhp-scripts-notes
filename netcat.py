@@ -110,7 +110,7 @@ class NetCat:
 
 def main():
     # Using argparse module to create a CLI
-    parser = argparse.ArguemntParser(
+    parser = argparse.ArgumentParser(
         description="BHP Net Tool",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         # Example of usage to the user when they type --help
