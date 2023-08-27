@@ -26,7 +26,36 @@ class NetCat:
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     def send(self):
-        pass
+
+        # Connect to the target and port
+        self.socket.connect((self.args.target, self.args.port))
+        if self.buffer:
+            self.socket.send(self.buffer)
+
+
+        try:
+            # Start the loop to receive data from the target
+            while True:
+                recv_len = 1
+                response = ''
+                while recv_len:
+                    data = self.socket.recv(4096)
+                    recv_len = len(data)
+                    response += data.decode()
+                    # If there is no more data, break out of the loop
+                    if recv_len < 4096:
+                        break
+                if response:
+                    # Print the response, and wait for more input
+                    print(response)
+                    buffer = input(">")
+                    buffer += "\n"
+                    self.socket.send(buffer.encode())
+        except KeyboardInterrupt:
+            # The previous loop will run until the user presses Ctrl+C
+            print("User terminated.")
+            self.socket.close()
+            sys.exit()
 
     def listen(self):
         pass
