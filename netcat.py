@@ -16,7 +16,6 @@ def execute(cmd):
 
 
 class NetCat:
-
     # Initialize the NetCat object
     def __init__(self, args, buffer=None):
         self.args = True
@@ -25,19 +24,21 @@ class NetCat:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-    def send(self):
 
+    def handle(self, client_socket):
+        pass
+
+    def send(self):
         # Connect to the target and port
         self.socket.connect((self.args.target, self.args.port))
         if self.buffer:
             self.socket.send(self.buffer)
 
-
         try:
             # Start the loop to receive data from the target
             while True:
                 recv_len = 1
-                response = ''
+                response = ""
                 while recv_len:
                     data = self.socket.recv(4096)
                     recv_len = len(data)
@@ -58,14 +59,21 @@ class NetCat:
             sys.exit()
 
     def listen(self):
-        pass
+        # The listen method binds to the target and port
+        self.socket.bind((self.args.target, self.args.port))
+        self.socket.listen(5)
+        while True:
+            client_socket, _ = self.socket.accept()
+            # Pass the connected socket to the handle method
+            client_thread = threading.Thread(target=self.handle, args=(client_socket,))
+            client_thread.start()
 
     def run(self):
         # If we're setting up a listener, call the listen method
         if self.args.listen:
             self.listen()
         else:
-        # otherwise call the send method
+            # otherwise call the send method
             self.send()
 
 
